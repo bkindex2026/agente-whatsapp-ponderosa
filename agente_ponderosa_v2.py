@@ -109,6 +109,24 @@ def mover_a_fallidos(file_path: str, filename: str, motivo: str):
     logger.warning(log_msg)
     print(f"⚠️ {log_msg}")
 
+    # Paso 83.0: Registrar la incidencia de auditoría en Neon PostgreSQL
+    if HAS_DB:
+        try:
+            import database
+            with database.get_connection() as conn:
+                with conn.cursor() as cursor:
+                    cursor.execute(
+                        """
+                        INSERT INTO errores_comprobantes (nombre_archivo, motivo_error, remitente)
+                        VALUES (%s, %s, %s);
+                        """,
+                        (filename, motivo, "WHATSAPP_WEBHOOK")
+                    )
+                    conn.commit()
+            print(f"📌 Error registrado exitosamente en errores_comprobantes (Neon DB).")
+        except Exception as db_err:
+            logger.error(f"Error registrando en tabla errores_comprobantes: {db_err}")
+
 def actualizar_registro_csv(data: dict):
     if HAS_CSV_MODULE:
         try:
