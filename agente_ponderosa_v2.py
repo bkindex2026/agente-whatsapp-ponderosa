@@ -1,6 +1,3 @@
-
-from fastapi import FastAPI, Request, BackgroundTasks, HTTPException, status
-from fastapi.responses import FileResponse
 import os
 import io
 import hashlib
@@ -22,10 +19,8 @@ from google.genai import types
 # ==============================================================================
 # 1. CONFIGURACIÓN INICIAL Y ENTORNO SEGURO
 # ==============================================================================
-# Invariante del proyecto: Modelo oficial vigente gemini-3.8-flash
 MODEL_NAME = "gemini-3.8-flash"
 
-# Lectura de variable de entorno (Render o entorno local)
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
 if not GEMINI_API_KEY:
@@ -53,6 +48,9 @@ app = FastAPI(
     title="Agente Ponderosa v2 - Plataforma Autónoma de Gastos",
     version="2.2.0",
 )
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
 
 try:
     import database
@@ -111,24 +109,6 @@ def mover_a_fallidos(file_path: str, filename: str, motivo: str):
     log_msg = f"Archivo '{filename}' movido a errores. Motivo: {motivo}"
     logger.warning(log_msg)
     print(f"⚠️ {log_msg}")
-
-    # Paso 83.0: Registrar la incidencia de auditoría en Neon PostgreSQL
-    if HAS_DB:
-        try:
-            import database
-            with database.get_connection() as conn:
-                with conn.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        INSERT INTO errores_comprobantes (nombre_archivo, motivo_error, remitente)
-                        VALUES (%s, %s, %s);
-                        """,
-                        (filename, motivo, "WHATSAPP_WEBHOOK")
-                    )
-                    conn.commit()
-            print(f"📌 Error registrado exitosamente en errores_comprobantes (Neon DB).")
-        except Exception as db_err:
-            logger.error(f"Error registrando en tabla errores_comprobantes: {db_err}")
 
 def actualizar_registro_csv(data: dict):
     if HAS_CSV_MODULE:
@@ -309,16 +289,6 @@ async def webhook_whatsapp(request: Request, background_tasks: BackgroundTasks):
     return {"status": "queued", "filename": filename, "timestamp": datetime.now().isoformat()}
 
 if __name__ == "__main__":
-    @app.get("/descargar-csv")
-def descargar_csv():
-    csv_path = "comprobantes_ponderosa.csv"
-    if os.path.exists(csv_path):
-        return FileResponse(
-            path=csv_path,
-            filename="comprobantes_ponderosa.csv",
-            media_type="text/csv"
-        )
-    raise HTTPException(status_code=404, detail="El archivo CSV aún no contiene registros.")
     import uvicorn
     print("🚀 Iniciando Agente Ponderosa v2...")
     uvicorn.run(app, host="0.0.0.0", port=8000)
