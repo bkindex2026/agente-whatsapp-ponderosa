@@ -1,3 +1,6 @@
+
+from fastapi import FastAPI, Request, BackgroundTasks, HTTPException, status
+from fastapi.responses import FileResponse
 import os
 import io
 import hashlib
@@ -306,6 +309,16 @@ async def webhook_whatsapp(request: Request, background_tasks: BackgroundTasks):
     return {"status": "queued", "filename": filename, "timestamp": datetime.now().isoformat()}
 
 if __name__ == "__main__":
+    @app.get("/descargar-csv")
+def descargar_csv():
+    csv_path = "comprobantes_ponderosa.csv"
+    if os.path.exists(csv_path):
+        return FileResponse(
+            path=csv_path,
+            filename="comprobantes_ponderosa.csv",
+            media_type="text/csv"
+        )
+    raise HTTPException(status_code=404, detail="El archivo CSV aún no contiene registros.")
     import uvicorn
     print("🚀 Iniciando Agente Ponderosa v2...")
     uvicorn.run(app, host="0.0.0.0", port=8000)
