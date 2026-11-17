@@ -251,9 +251,9 @@ async def webhook_whatsapp(request: Request, background_tasks: BackgroundTasks):
     except Exception:
         raise HTTPException(status_code=400, detail="Payload JSON inválido")
 
-    data = payload.get("data", {})
+    data = payload.get("data", payload)
     message_data = data.get("message", {}) if isinstance(data, dict) else {}
-    document_msg = message_data.get("documentMessage") or message_data.get("imageMessage") or message_data
+    document_msg = message_data.get("documentMessage") or message_data.get("imageMessage")
 
     mime_type = "image/jpeg"
     filename = None
