@@ -131,7 +131,7 @@ def actualizar_registro_csv(data: dict):
         writer.writerow(row)
 
 # ==============================================================================
-# 4. MOTOR MULTIMODAL GEMINI OCR (Con Reintentos Automáticos)
+# 4. MOTOR MULTIMODAL GEMINI OCR (Con Retroceso Exponencial Defensivo 15s/30s/45s)
 # ==============================================================================
 PROMPT_AUDITORIA = """
 Actúa como un Auditor Contable Sénior especializado en la normativa tributaria peruana y operaciones mineras de Ponderosa Minerals S.A.C. (RUC: 20601014193).
@@ -143,13 +143,19 @@ Si no se observa el RUC receptor pero es un gasto de operación legible, asigna 
 """
 
 def procesar_comprobante_con_gemini(file_bytes: bytes, mime_type: str) -> Optional[ComprobanteSchema]:
-    max_retries = 3
+    # Aumentamos a 4 intentos con pausas reales para superar picos de saturacion en Google
+    delays = [15, 30, 45]
+    max_retries = len(delays) + 1
+    
     for intento in range(1, max_retries + 1):
         try:
+            # Si el mime_type viene vacío, asegurar fallback a image/jpeg
+            mime_final = mime_type if mime_type and mime_type.strip() != "" else "image/jpeg"
+            
             response = client.models.generate_content(
                 model=MODEL_NAME,
                 contents=[
-                    types.Part.from_bytes(data=file_bytes, mime_type=mime_type),
+                    types.Part.from_bytes(data=file_bytes, mime_type=mime_final),
                     PROMPT_AUDITORIA
                 ],
                 config=types.GenerateContentConfig(
@@ -161,9 +167,10 @@ def procesar_comprobante_con_gemini(file_bytes: bytes, mime_type: str) -> Option
             return ComprobanteSchema.model_validate_json(response.text)
         except Exception as e:
             error_str = str(e)
-            if ("503" in error_str or "UNAVAILABLE" in error_str or "429" in error_str) and intento < max_retries:
-                espera = intento * 4
+            if ("503" in error_str or "UNAVAILABLE" in error_str or "429" in error_str) and intento <= len(delays):
+                espera = delays[intento - 1]
                 print(f"⚠️ Servidor de Google saturado (503). Reintentando ({intento}/{max_retries}) en {espera}s...")
+                logger.warning(f"Saturacion 503 detectada. Pausando {espera}s antes de reintentar...")
                 time.sleep(espera)
             else:
                 logger.error(f"Error procesando en Gemini API: {e}")
