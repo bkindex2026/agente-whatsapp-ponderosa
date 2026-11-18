@@ -211,9 +211,13 @@ def ejecutar_pipeline_comprobante(filename: str, original_bytes: bytes, mime_typ
         mover_a_fallidos(file_path, filename, "Fallo en la respuesta JSON de Gemini API")
         return
 
+    total_val = resultado_ocr.total or 0.0
+    op_gravada_val = resultado_ocr.op_gravada or 0.0
+    galones_val = resultado_ocr.galones or 0.0
+
     es_invalido = (
         resultado_ocr.tipo_documento == "OTRO" and
-        resultado_ocr.total <= 0.0 and resultado_ocr.op_gravada <= 0.0 and resultado_ocr.galones <= 0.0
+        total_val <= 0.0 and op_gravada_val <= 0.0 and galones_val <= 0.0
     )
 
     if es_invalido:
