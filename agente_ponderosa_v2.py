@@ -180,17 +180,18 @@ def procesar_comprobante_con_gemini(file_bytes: bytes, mime_type: str) -> Option
 
 def tarea_reprocesar_pendiente_async(file_bytes: bytes, mime_type: str, file_hash: str, filename: str):
     """Tarea autónoma en segundo plano para resolver registros en PENDIENTE_OCR"""
-    time.sleep(15)
+    time.sleep(20)
     print(f"🔄 TAREA AUTÓNOMA: Intentando reprocesar Gemini OCR para hash {file_hash[:8]}...")
     resultado_ocr = procesar_comprobante_con_gemini(file_bytes, mime_type)
     if resultado_ocr:
         data_dict = resultado_ocr.model_dump()
         data_dict["sha256_hash"] = file_hash
-        data_dict["nombre_archivo"] = filename  # Alineado con contrato Regla 7.0
+        data_dict["nombre_archivo"] = filename
         if HAS_DB:
             try:
-                nuevo_id = database.insertar_comprobante(data_dict)
-                print(f"✅ TAREA AUTÓNOMA: Neon DB actualizada con ID: {nuevo_id} para hash {file_hash[:8]}.")
+                # LLAMADA CORREGIDA: UPDATE en lugar de INSERT
+                database.actualizar_comprobante_por_hash(data_dict)
+                print(f"✅ TAREA AUTÓNOMA: Neon DB actualizada correctamente para {filename}.")
             except Exception as e:
                 logger.error(f"Error actualizando DB en segundo plano: {e}")
         actualizar_registro_csv(data_dict)

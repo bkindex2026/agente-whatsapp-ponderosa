@@ -85,3 +85,60 @@ def insertar_comprobante(data: dict) -> int:
     finally:
         cursor.close()
         conn.close()
+
+def actualizar_comprobante_por_hash(data: dict) -> bool:
+    query = """
+    UPDATE comprobantes SET
+        tipo_documento = %(tipo_documento)s,
+        serie_numero = %(serie_numero)s,
+        ruc_emisor = %(ruc_emisor)s,
+        razon_social_emisor = %(razon_social)s,
+        ruc_receptor = %(ruc_receptor)s,
+        fecha_emision = %(fecha_emision)s,
+        hora_emision = %(hora)s,
+        galones = %(galones)s,
+        concepto_detalle = %(concepto)s,
+        chofer = %(chofer)s,
+        moneda = %(moneda)s,
+        op_gravada = %(op_gravada)s,
+        igv = %(igv)s,
+        total = %(total)s,
+        placa_referencia = %(placa)s
+    WHERE hash_contenido = %(sha256_hash)s OR nombre_archivo = %(nombre_archivo)s;
+    """
+    
+    data_mapeada = {
+        "tipo_documento": str(data.get("tipo_documento") or "COMPROBANTE"),
+        "serie_numero": str(data.get("serie_numero") or "PENDIENTE_OCR"),
+        "ruc_emisor": str(data.get("ruc_emisor") or "00000000000"),
+        "razon_social": str(data.get("razon_social") or "DESCONOCIDO"),
+        "ruc_receptor": str(data.get("ruc_receptor") or "20601014193"),
+        "fecha_emision": data.get("fecha_emision") if data.get("fecha_emision") else None,
+        "hora": str(data.get("hora")) if data.get("hora") else None,
+        "galones": float(data.get("galones") or 0.0),
+        "concepto": str(data.get("concepto")) if data.get("concepto") else None,
+        "chofer": str(data.get("chofer")) if data.get("chofer") else None,
+        "moneda": str(data.get("moneda") or "PEN"),
+        "op_gravada": float(data.get("op_gravada") or 0.0),
+        "igv": float(data.get("igv") or 0.0),
+        "total": float(data.get("total") or 0.0),
+        "placa": str(data.get("placa")) if data.get("placa") else None,
+        "nombre_archivo": str(data.get("nombre_archivo") or ""),
+        "sha256_hash": str(data.get("sha256_hash") or "")
+    }
+
+    conn = obtener_conexion()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(query, data_mapeada)
+        filas_afectadas = cursor.rowcount
+        conn.commit()
+        print(f"🔄 EXITO: Se actualizo el registro PENDIENTE_OCR en Neon DB ({filas_afectadas} filas afectadas).")
+        return filas_afectadas > 0
+    except Exception as e:
+        conn.rollback()
+        print(f"❌ Error al ejecutar UPDATE en PostgreSQL: {e}")
+        return False
+    finally:
+        cursor.close()
+        conn.close()
