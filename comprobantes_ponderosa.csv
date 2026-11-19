@@ -1,0 +1,2 @@
+tipo_documento,serie_numero,ruc_emisor,razon_social,ruc_receptor,fecha_emision,hora,galones,concepto,chofer,moneda,op_gravada,igv,total,placa,sha256_hash,fecha_registro
+FACTURA,F319-0006154,20518725760,EXPRESO INTERN. VIRGEN DE CHAPI E.I.R.L. - EXIVICHA E.I.R.L.,20600899750,2026-10-25,18:38:00,,SERVICIO DE TRANSPORTE ACARI - LIMA (PLUS CAMA) - PASAJERO: JUAN JOSE COTRINA JAVIER,JUAN JOSE COTRINA JAVIER,PEN,0.0,0.0,70.0,,bbd076c3e6624916e0d84059ea74ea014e385ba5bcafccc4ed02676e010b2948,2026-11-16T13:25:59.862231

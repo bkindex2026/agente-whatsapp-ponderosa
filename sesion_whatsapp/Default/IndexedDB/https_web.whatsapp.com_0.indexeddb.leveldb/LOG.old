@@ -1,0 +1,14 @@
+2026/11/16-09:17:30.217 9b24 Reusing MANIFEST G:\Otros ordenadores\Mi PC\Mi_Drive_Organizado\01_Ponderosa_Minerals\Proyectos\agente whastapp\sesion_whatsapp\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/11/16-09:17:30.230 9b24 Recovering log #29
+2026/11/16-09:17:30.452 9b24 Reusing old log G:\Otros ordenadores\Mi PC\Mi_Drive_Organizado\01_Ponderosa_Minerals\Proyectos\agente whastapp\sesion_whatsapp\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000029.log 
+2026/11/16-09:17:30.465 9b24 Delete type=2 #27
+2026/11/16-09:17:30.486 9b24 Delete type=2 #28
+2026/11/16-09:17:30.488 9b24 Delete type=2 #30
+2026/11/16-09:17:38.931 9b24 Level-0 table #35: started
+2026/11/16-09:17:39.645 9b24 Level-0 table #35: 1251437 bytes OK
+2026/11/16-09:17:39.661 9b24 Delete type=0 #29
+2026/11/16-09:17:40.005 a6ec Compacting 1@1 + 2@2 files
+2026/11/16-09:17:41.434 a6ec Generated table #36@1: 46323 keys, 2205459 bytes
+2026/11/16-09:17:42.643 a6ec Generated table #37@1: 29305 keys, 1822807 bytes
+2026/11/16-09:17:42.643 a6ec Compacted 1@1 + 2@2 files => 4028266 bytes
+2026/11/16-09:17:42.647 a6ec compacted to: files[ 0 0 2 0 0 0 0 ]

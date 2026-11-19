@@ -1,0 +1,42 @@
+2026-11-13 18:03:32,634 [INFO] ==================================================================
+2026-11-13 18:03:32,637 [INFO]   INICIANDO AGENTE AUTÓNOMO PONDEROSA MINERALS S.A.C.             
+2026-11-13 18:03:32,638 [INFO] ==================================================================
+2026-11-13 18:03:32,638 [INFO] Inicializando Chrome Driver con sesión persistente...
+2026-11-13 18:03:43,747 [INFO] Esperando autenticación y carga de WhatsApp Web...
+2026-11-13 18:04:29,719 [INFO] WhatsApp Web listo para operar.
+2026-11-13 18:04:45,000 [ERROR] No se pudo encontrar o abrir el chat 'Facturas ponderosa'.
+2026-11-13 18:04:45,001 [WARNING] No se pudo interactuar con el chat. Se procederá a procesar archivos locales existentes.
+2026-11-13 18:04:49,287 [INFO] No hay archivos pendientes en la carpeta raíz de comprobantes.
+2026-11-13 18:04:49,305 [INFO] Ciclo de ejecución finalizado con éxito.
+2026-11-13 18:19:19,764 [INFO] ==================================================================
+2026-11-13 18:19:19,767 [INFO]   INICIANDO AGENTE AUTÓNOMO PONDEROSA MINERALS S.A.C.             
+2026-11-13 18:19:19,767 [INFO] ==================================================================
+2026-11-13 18:19:20,038 [INFO] Inicializando Chrome Driver...
+2026-11-13 18:19:35,633 [INFO] Esperando carga de WhatsApp Web...
+2026-11-13 18:19:42,153 [INFO] WhatsApp Web listo para operar.
+2026-11-13 18:19:57,342 [ERROR] No se pudo encontrar o abrir el chat 'Facturas ponderosa'.
+2026-11-13 18:19:57,343 [WARNING] No se interactuó con el chat. Se revisarán archivos locales.
+2026-11-13 18:20:00,926 [INFO] No hay archivos pendientes de procesamiento.
+2026-11-13 18:20:00,927 [INFO] Ejecución finalizada.
+2026-11-16 09:17:21,448 [INFO] ==================================================================
+2026-11-16 09:17:21,457 [INFO]   INICIANDO AGENTE AUTÓNOMO PONDEROSA MINERALS S.A.C.             
+2026-11-16 09:17:21,457 [INFO] ==================================================================
+2026-11-16 09:17:21,850 [INFO] Inicializando Chrome Driver...
+2026-11-16 09:17:31,780 [INFO] Esperando carga de WhatsApp Web...
+2026-11-16 09:17:35,143 [INFO] WhatsApp Web listo para operar.
+2026-11-16 09:17:38,951 [INFO] Buscando el chat 'Facturas ponderosa' mediante la caja de búsqueda...
+2026-11-16 09:17:48,118 [ERROR] No se pudo encontrar o abrir el chat 'Facturas ponderosa'.
+2026-11-16 09:17:48,119 [WARNING] No se interactuó con el chat. Se revisarán archivos locales.
+2026-11-16 09:17:52,657 [INFO] No hay archivos pendientes de procesamiento en la carpeta de comprobantes.
+2026-11-16 09:17:52,658 [INFO] Ejecución finalizada.
+2026-11-16 09:34:43,334 [INFO] ==================================================================
+2026-11-16 09:34:43,349 [INFO]   INICIANDO AGENTE AUTÓNOMO PONDEROSA MINERALS S.A.C. (v1.3)
+2026-11-16 09:34:43,349 [INFO] ==================================================================
+2026-11-16 09:34:43,615 [INFO] Inicializando Chrome Driver (v1.3)...
+2026-11-16 09:35:04,150 [INFO] Esperando carga de WhatsApp Web...
+2026-11-16 09:35:09,182 [INFO] WhatsApp Web listo para operar.
+2026-11-16 09:35:16,861 [INFO] Buscando el chat 'Facturas ponderosa' mediante inspección JS...
+2026-11-16 09:35:21,515 [ERROR] No se pudo encontrar o abrir el chat 'Facturas ponderosa'. Verifique que esté visible en WhatsApp.
+2026-11-16 09:35:21,516 [WARNING] No se interactuó con el chat. Se revisarán archivos locales.
+2026-11-16 09:35:24,978 [INFO] No hay archivos pendientes de procesamiento en la carpeta de comprobantes.
+2026-11-16 09:35:24,979 [INFO] Ejecución finalizada (v1.3).

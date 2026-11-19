@@ -3,3 +3,4 @@ uvicorn
 pydantic
 google-genai
 pillow
+psycopg2-binary

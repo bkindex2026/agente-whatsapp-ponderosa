@@ -1,0 +1,14 @@
+2026/11/16-09:34:57.716 22b0 Reusing MANIFEST G:\Otros ordenadores\Mi PC\Mi_Drive_Organizado\01_Ponderosa_Minerals\Proyectos\agente whastapp\sesion_whatsapp\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/11/16-09:34:57.728 22b0 Recovering log #34
+2026/11/16-09:34:57.911 22b0 Reusing old log G:\Otros ordenadores\Mi PC\Mi_Drive_Organizado\01_Ponderosa_Minerals\Proyectos\agente whastapp\sesion_whatsapp\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000034.log 
+2026/11/16-09:34:57.914 22b0 Delete type=2 #31
+2026/11/16-09:34:57.915 22b0 Delete type=2 #32
+2026/11/16-09:34:57.915 22b0 Delete type=2 #35
+2026/11/16-09:35:00.954 3c4c Level-0 table #40: started
+2026/11/16-09:35:01.511 3c4c Level-0 table #40: 1180539 bytes OK
+2026/11/16-09:35:01.528 3c4c Delete type=0 #34
+2026/11/16-09:35:01.986 3c4c Compacting 1@1 + 2@2 files
+2026/11/16-09:35:04.934 3c4c Generated table #41@1: 50119 keys, 2207810 bytes
+2026/11/16-09:35:07.101 3c4c Generated table #42@1: 29839 keys, 1972152 bytes
+2026/11/16-09:35:07.101 3c4c Compacted 1@1 + 2@2 files => 4179962 bytes
+2026/11/16-09:35:07.107 3c4c compacted to: files[ 0 0 2 0 0 0 0 ]
