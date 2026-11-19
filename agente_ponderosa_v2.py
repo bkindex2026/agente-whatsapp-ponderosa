@@ -47,7 +47,7 @@ logger = logging.getLogger("AgentePonderosa")
 
 app = FastAPI(
     title="Agente Ponderosa v2 - Plataforma Autónoma de Gastos",
-    version="2.3.0",
+    version="2.3.1",
 )
 
 @app.get("/health")
@@ -122,11 +122,11 @@ def actualizar_registro_csv(data: dict):
             
     csv_path = "comprobantes_ponderosa.csv"
     file_exists = os.path.exists(csv_path)
-    fieldnames = list(ComprobanteSchema.model_fields.keys()) + ["sha256_hash", "fecha_registro"]
+    fieldnames = list(ComprobanteSchema.model_fields.keys()) + ["sha256_hash", "nombre_archivo"]
     
     import csv
     with open(csv_path, mode="a", newline="", encoding="utf-8") as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames, extrasaction="ignore")
         if not file_exists:
             writer.writeheader()
         row = {k: data.get(k, "") for k in fieldnames}
@@ -178,7 +178,7 @@ def procesar_comprobante_con_gemini(file_bytes: bytes, mime_type: str) -> Option
                 return None
     return None
 
-def tarea_reprocesar_pendiente_async(file_bytes: bytes, mime_type: str, file_hash: str):
+def tarea_reprocesar_pendiente_async(file_bytes: bytes, mime_type: str, file_hash: str, filename: str):
     """Tarea autónoma en segundo plano para resolver registros en PENDIENTE_OCR"""
     time.sleep(15)
     print(f"🔄 TAREA AUTÓNOMA: Intentando reprocesar Gemini OCR para hash {file_hash[:8]}...")
@@ -186,11 +186,11 @@ def tarea_reprocesar_pendiente_async(file_bytes: bytes, mime_type: str, file_has
     if resultado_ocr:
         data_dict = resultado_ocr.model_dump()
         data_dict["sha256_hash"] = file_hash
-        data_dict["fecha_registro"] = datetime.now().isoformat()
+        data_dict["nombre_archivo"] = filename  # Alineado con contrato Regla 7.0
         if HAS_DB:
             try:
-                database.insertar_comprobante(data_dict)
-                print(f"✅ TAREA AUTÓNOMA: Base de datos actualizada con OCR exitoso para hash {file_hash[:8]}.")
+                nuevo_id = database.insertar_comprobante(data_dict)
+                print(f"✅ TAREA AUTÓNOMA: Neon DB actualizada con ID: {nuevo_id} para hash {file_hash[:8]}.")
             except Exception as e:
                 logger.error(f"Error actualizando DB en segundo plano: {e}")
         actualizar_registro_csv(data_dict)
@@ -224,7 +224,7 @@ def ejecutar_pipeline_comprobante(filename: str, original_bytes: bytes, mime_typ
     print(f"🔍 Enviando {filename} a Gemini 3.8 Flash para OCR...")
     resultado_ocr = procesar_comprobante_con_gemini(bytes_a_procesar, mime_final)
 
-    # BLINDAJE PROTOCOLO 1.0: Fallback defensivo si Gemini devuelve None por 503
+    # Fallback defensivo si Gemini devuelve None por 503/Error
     if not resultado_ocr:
         print("⚠️ Gemini devolvió 503/Error. Generando registro defensivo PENDIENTE_OCR...")
         resultado_ocr = ComprobanteSchema(
@@ -234,25 +234,26 @@ def ejecutar_pipeline_comprobante(filename: str, original_bytes: bytes, mime_typ
             razon_social="PENDIENTE PROCESAMIENTO",
             total=0.0
         )
-        # Programar resolución autónoma de fondo
         background_tasks.add_task(
             tarea_reprocesar_pendiente_async,
             file_bytes=bytes_a_procesar,
             mime_type=mime_final,
-            file_hash=file_hash
+            file_hash=file_hash,
+            filename=filename
         )
 
     data_dict = resultado_ocr.model_dump()
     data_dict["sha256_hash"] = file_hash
-    data_dict["fecha_registro"] = datetime.now().isoformat()
+    data_dict["nombre_archivo"] = filename  # Alineación 1:1 con esquema de Neon DB
 
-    # Inserción garantizada en Neon PostgreSQL (Incremento a fila 21 asegurado)
+    # Inserción garantizada en Neon PostgreSQL
     if HAS_DB:
         try:
-            database.insertar_comprobante(data_dict)
-            print("🚀 Registro insertado con éxito en Neon PostgreSQL.")
+            nuevo_id = database.insertar_comprobante(data_dict)
+            print(f"🚀 EXITO: Registro insertado con éxito en Neon PostgreSQL. ID: {nuevo_id}")
         except Exception as e:
             logger.error(f"Error PostgreSQL: {e}")
+            print(f"❌ Error al guardar en Neon DB: {e}")
 
     actualizar_registro_csv(data_dict)
     print("📊 Registro exportado a comprobantes_ponderosa.csv.")
